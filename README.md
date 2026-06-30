@@ -23,7 +23,7 @@ Blank
 
 **Frontend**
 ```bash
-bun create vite stagepick-frontend --template react-ts
+bun create vite frontend --template react-ts
 ```
 ESLint
 
