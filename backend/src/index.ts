@@ -2,14 +2,18 @@ import express, { type Request, type Response } from "express";
 import v1Router from "./routes/v1";
 
 const app = express();
-const port = process.env.PORT ?? 8080;
+const port = process.env.PORT ? Number(process.env.PORT) : 8081;
+
+if (Number.isNaN(port)) {
+  throw new Error("PORT must be a number");
+}
 
 app.use(express.json());
 
 app.get("/health", (_req: Request, res: Response) => {
-  res.json({
+  res.status(200).json({
     status: "ok",
-    service: "stagepick-api",
+    service: "stagepick-backend",
   });
 });
 
@@ -22,6 +26,6 @@ app.use((_req: Request, res: Response) => {
   });
 });
 
-app.listen(port, () => {
+app.listen(port, "0.0.0.0", () => {
   console.log(`API running on http://localhost:${port}`);
 });

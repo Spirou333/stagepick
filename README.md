@@ -16,14 +16,13 @@ podman network create stagepick
 
 Start Backend
 ```bash
-podman run -it --name stagepick-backend -p 8081:8081 --network stagepick -v ./backend:/app /bin/bash
-bun add -d @types/express
+podman run -it --name stagepick-backend -p 8081:8081 --network stagepick -v ./backend:/app docker.io/oven/bun:1 /bin/bash
 bun run dev
 ```
 
 Start Frontend
 ```bash
-podman run -it --name stagepick-frontend -p 8080:8080 --network stagepick -v ./frontend:/app /bin/bash
+podman run -it --name stagepick-frontend -p 8080:8080 --network stagepick -v ./frontend:/app docker.io/oven/bun:1 /bin/bash
 bunx --bun vite
 ```
 
@@ -38,6 +37,7 @@ podman run --name stagepick-database -p 5432:5432 --network stagepick -e POSTGRE
 ```bash
 bun init backend
 bun add express
+bun add -d @types/express
 ```
 Options:
 - Blank
@@ -45,6 +45,8 @@ Options:
 **Frontend**
 ```bash
 bun create vite frontend --template react-ts
+bun add bootstrap sass
+bun add react-hook-form zod @hookform/resolvers
 ```
 Options:
 - ESLint
