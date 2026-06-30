@@ -1,4 +1,4 @@
-# stagepick-backend
+# backend
 
 To install dependencies:
 
