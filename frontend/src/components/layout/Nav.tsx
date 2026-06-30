@@ -1,8 +1,8 @@
 export function Nav() {
   return (
-    <nav className="navbar navbar-expand-lg bg-body-tertiary border-bottom">
+    <nav className="navbar navbar-expand-lg">
       <div className="container">
-        <a className="navbar-brand fw-semibold" href="/">
+        <a className="navbar-brand text-white fw-semibold" href="/">
           Stagepick
         </a>
 
@@ -20,13 +20,13 @@ export function Nav() {
 
         <div className="collapse navbar-collapse" id="mainNavbar">
           <ul className="navbar-nav ms-auto">
-            <li className="nav-item">
+            <li className="nav-item me-2">
               <a className="nav-link active" href="/">
                 Apply
               </a>
             </li>
 
-            <li className="nav-item">
+            <li className="nav-item me-2">
               <a className="nav-link" href="/status">
                 Application Status
               </a>

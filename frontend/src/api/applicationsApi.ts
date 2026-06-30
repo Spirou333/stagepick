@@ -1,16 +1,14 @@
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8081/v1";
+const BACKEND_URL =
+  import.meta.env.BACKEND_URL ?? "http://localhost:8081/v1";
 
 export type CreateApplicationPayload = {
-  firstName: string;
-  lastName: string;
+  stageName: string;
   email: string;
-  phone?: string;
   motivation: string;
 };
 
 export async function createApplication(payload: CreateApplicationPayload) {
-  const response = await fetch(`${API_BASE_URL}/applications`, {
+  const response = await fetch(`${BACKEND_URL}/applications`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

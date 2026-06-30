@@ -1,1 +1,20 @@
+$primary: #336ed3;
+$secondary: #8734cb;
+
 @import "bootstrap/scss/bootstrap";
+
+.navbar-nav {
+  .nav-link {
+    &.active {
+      font-weight: 800;
+      color: #ffffff;
+    }
+    color: #ffffff;
+  }
+}
+
+form {
+  .form-label {
+    margin-bottom: 0.2rem;
+  }
+}

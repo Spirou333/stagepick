@@ -1,9 +1,9 @@
 export function Footer() {
   return (
-    <footer className="border-top py-4 mt-auto">
-      <div className="container small text-muted d-flex justify-content-between">
+    <footer className="py-4">
+      <div className="container small text-white d-flex justify-content-between">
         <span>© {new Date().getFullYear()} Stagepick by Spirou333</span>
-        <span>Application Portal</span>
+        <span>DJ Application Portal</span>
       </div>
     </footer>
   );

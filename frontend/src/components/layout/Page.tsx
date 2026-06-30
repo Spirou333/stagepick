@@ -8,14 +8,16 @@ type SiteLayoutProps = {
 
 export function Page({ children }: SiteLayoutProps) {
   return (
-    <div className="min-vh-100 d-flex flex-column bg-light">
-      <Nav />
-
-      <main className="flex-grow-1">
+    <div className="min-vh-100 bg-light">
+      <nav className="container-fluid bg-primary">
+        <Nav />
+      </nav>
+      <main className="container-xl py-5">
         {children}
       </main>
-
-      <Footer />
+      <footer className="container-fluid bg-primary">
+        <Footer />
+      </footer>
     </div>
   );
 }
