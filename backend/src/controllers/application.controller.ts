@@ -18,7 +18,7 @@ export function createApplication(req: Request, res: Response) {
 export function getApplicationById(req: Request, res: Response) {
   const { applicationId } = req.params;
 
-  res.json({
+  res.status(200).json({
     data: {
       id: applicationId,
     },
@@ -28,7 +28,7 @@ export function getApplicationById(req: Request, res: Response) {
 export function updateApplication(req: Request, res: Response) {
   const { applicationId } = req.params;
 
-  res.json({
+  res.status(201).json({
     message: "Application updated",
     data: {
       id: applicationId,

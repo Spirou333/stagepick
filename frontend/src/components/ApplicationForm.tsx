@@ -2,6 +2,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import { createApplication } from "../api/applicationsApi";
+import { GenrePicker } from "./GenrePicker";
+
+const genreSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  main: z.boolean()
+});
 
 const eventTypeOptions = [
   { value: "convention", label: "Convention" },
@@ -18,12 +25,12 @@ const eventSchema = z.object({
   live: z.boolean(),
   type: z.enum(["convention", "festival", "club", "vrchat", "private", "other"], {
     message: "Please select an event type",
-  }),
+  })
 });
 
 const applicationSchema = z.object({
   stageName: z.string().min(1, "Stagename is required for the lineup"),
-  email: z.string().min(1, "E-Mail is required to be able to contact you").email("Enter a valid email address"),
+  email: z.email("Enter a valid email address").min(1, "E-Mail is required to be able to contact you"),
   telegram: z.string(),
   regID: z.number(),
   motivation: z
@@ -34,7 +41,23 @@ const applicationSchema = z.object({
     .array(eventSchema)
     .min(1, "Please add at least one event")
     .max(10, "You can add up to 10 events"),
-});
+  genres: z
+    .array(genreSchema)
+    .min(1, "You need to select at least one genre")
+    .max(10, "You can add a maximum of 10 other genres")
+}).superRefine((data, context) => {
+    const hasMainGenre = data.genres.some(
+      (item) => item.main
+    );
+
+    if (!hasMainGenre) {
+      context.addIssue({
+        code: "custom",
+        path: ["genres"],
+        message: "At least one main genre must be selected.",
+      });
+    }
+  });
 
 type ApplicationFormData = z.infer<typeof applicationSchema>;
 
@@ -43,10 +66,30 @@ export function ApplicationForm() {
     register,
     control,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    setValue,
+    watch,
+    formState: { errors, isSubmitting }
   } = useForm<ApplicationFormData>({
     resolver: zodResolver(applicationSchema),
+    defaultValues: {
+      stageName: "",
+      email: "",
+      telegram: "",
+      regID: 0,
+      motivation: "",
+      genres: [],
+      events: [
+        {
+          name: "",
+          date: "",
+          type: "convention",
+          live: false
+        }
+      ]
+    }
   });
+
+  const selectedGenres = watch("genres");
 
   const {
     fields: eventFields,
@@ -54,7 +97,7 @@ export function ApplicationForm() {
     remove: removeEvent,
   } = useFieldArray({
     control,
-    name: "events",
+    name: "events"
   });
 
   async function onSubmit(data: ApplicationFormData) {
@@ -68,14 +111,14 @@ export function ApplicationForm() {
 
   return (
     <form className="card shadow-sm" onSubmit={handleSubmit(onSubmit)}>
-      <div className="card-body p-4">
+      <div className="card-body px-4">
         <div className="row g-4">
           <div className="col-12">
-            <h4>General Information</h4>
+            <h4 className="mt-4 mb-1">General Information</h4>
           </div>
           <div className="col-12 col-md-6">
             <label htmlFor="stageName" className="form-label">
-              Stage Name
+              Stage Name <span className="text-danger">*</span>
             </label>
             <input
               id="stageName"
@@ -96,15 +139,19 @@ export function ApplicationForm() {
           </div>
           <div className="col-12 col-md-6">
             <label htmlFor="email" className="form-label">
-              E-Mail Address
+              E-Mail Address <span className="text-danger">*</span>
             </label>
             <input
               id="email"
               type="email"
               placeholder="mail@domain.tld"
+              aria-describedby="emailHelpBlock"
               className={`form-control ${errors.email ? "is-invalid" : ""}`}
               {...register("email")}
             />
+            <div id="emailHelpBlock" className="form-text">
+              Notifications from Stagepick will be send to this E-Mail.
+            </div>
             {errors.email && (
               <div className="invalid-feedback">{errors.email.message}</div>
             )}
@@ -151,11 +198,11 @@ export function ApplicationForm() {
             )}
           </div>
           <div className="col-12">
-            <h4>DJ Specifications</h4>
+            <h4 className="mt-4 mb-1">DJ Specifications</h4>
             
           </div>
           <div className="col-12">
-            <h5>References</h5>
+            <h5>References <span className="text-danger">*</span></h5>
             <p className="text-muted small mb-0">
               Add up to 10 events as references for your application.
             </p>
@@ -167,7 +214,7 @@ export function ApplicationForm() {
                   name: "",
                   date: "",
                   live: true,
-                  type: "convention",
+                  type: "convention"
                 })
               }
               className="btn btn-primary d-block my-2 fw-bold"
@@ -265,12 +312,28 @@ export function ApplicationForm() {
           </div>
           </div>
           <div className="col-12">
+            <GenrePicker
+              selectedGenres={selectedGenres}
+              onChange={(items) => {
+                setValue("genres", items, {
+                  shouldDirty: true,
+                  shouldValidate: true,
+                });
+              }}
+            />
+            {errors.genres && (
+              <div className="text-danger small mt-1">
+                {errors.genres.message}
+              </div>
+            )}
+          </div>
+          <div className="col-12">
             <label htmlFor="motivation" className="form-label">
               Why do you want to apply?
             </label>
             <textarea
               id="motivation"
-              rows={6}
+              rows={3}
               className={`form-control ${
                 errors.motivation ? "is-invalid" : ""
               }`}

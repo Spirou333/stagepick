@@ -38,6 +38,8 @@ podman run --name stagepick-database -p 5432:5432 --network stagepick -e POSTGRE
 bun init backend
 bun add express
 bun add -d @types/express
+bun add cors
+bun add -d @types/cors
 ```
 Options:
 - Blank

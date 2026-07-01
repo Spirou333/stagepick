@@ -1,4 +1,5 @@
 import express, { type Request, type Response } from "express";
+import cors from "cors";
 import v1Router from "./routes/v1";
 
 const app = express();
@@ -7,6 +8,12 @@ const port = process.env.PORT ? Number(process.env.PORT) : 8081;
 if (Number.isNaN(port)) {
   throw new Error("PORT must be a number");
 }
+
+app.use(
+  cors({
+    origin: "http://localhost:8080",
+  }),
+);
 
 app.use(express.json());
 
